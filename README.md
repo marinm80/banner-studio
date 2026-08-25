@@ -1,5 +1,7 @@
 # Banner Studio
 
+**▶ Use it here: <https://marinm80.github.io/banner-studio/>** — no install, no sign-up.
+
 A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
 starting out in Information Technology and want a decent-looking cover image without learning
 Photoshop, creating an account, or paying for anything.
