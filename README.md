@@ -1,6 +1,7 @@
 # Banner Studio
 
-**▶ Use it here: <https://marinm80.github.io/banner-studio/>** — no install, no sign-up.
+**▶ Use it here: <https://banner-studio.rafaelmarin.dev>** — no install, no sign-up.
+Mirror: <https://marinm80.github.io/banner-studio/>
 
 A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
 starting out in Information Technology and want a decent-looking cover image without learning
@@ -64,6 +65,18 @@ npm run build
 ```
 
 The result lands in `dist/` and works on GitHub Pages, Netlify, Vercel or any static host.
+
+### With Docker
+
+The repository ships a multi-stage `Dockerfile` that builds the site and serves it with nginx:
+
+```bash
+docker build -t banner-studio . && docker run -p 8080:80 banner-studio
+```
+
+On Coolify (or any host that builds from a repository), choose the **Dockerfile** build pack —
+the *Static* build pack copies the repository without compiling it, which serves the raw source
+and renders a blank page.
 
 ## How it is put together
 
