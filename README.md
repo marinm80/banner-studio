@@ -21,6 +21,9 @@ itself in your own browser between visits.
   Cisco, MySQL, and many more — searchable by name or keyword.
 - **Add your own icons.** Upload an SVG/PNG/JPG or paste SVG code; your icons are saved in your
   browser and show up in the picker alongside the built-in ones.
+- **Use real photographs.** A curated set of free Unsplash photos — networking, cloud, code and
+  data centers — plus a dimming slider so your name stays readable on top. You can also upload
+  your own picture or paste any image link.
 - **Drop in an editable terminal window.** Every command line is yours to rewrite.
 - **Export.** JPEG or PNG at exact pixel size, rendered on a canvas so the download matches the
   preview.
@@ -78,10 +81,14 @@ Stack: React 18, Redux Toolkit, Vite and Tailwind CSS v4.
 
 ### Backgrounds
 
-Backgrounds are generated as SVG at runtime by `src/features/backgrounds/backgroundsAPI.js`, using
-a seeded random generator so the catalog is identical every time. They are served through
-`fetchBackgrounds({ theme, page, limit })`, which has the same shape as a paginated REST endpoint —
-swapping in a real provider such as Unsplash or Pexels means replacing that one function.
+Pattern backgrounds are generated as SVG at runtime by
+`src/features/backgrounds/backgroundsAPI.js`, using a seeded random generator so the catalog is
+identical every time. Photographs are hotlinked from the Unsplash CDN by id in the same file.
+Everything is served through `fetchBackgrounds({ theme, page, limit })`, which has the same shape
+as a paginated REST endpoint — swapping in a different provider means replacing that one function.
+
+Photos are used under the [Unsplash License](https://unsplash.com/license) and every photographer
+is credited under their thumbnail in the picker.
 
 ### Adding a new icon to the built-in library
 

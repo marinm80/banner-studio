@@ -203,7 +203,16 @@ const editorSlice = createSlice({
     },
     setBackground(state, action) {
       record(state);
-      state.background = action.payload;
+      // Photographs almost always need dimming before text is readable on top;
+      // flat generated patterns do not.
+      state.background = action.payload
+        ? { overlay: action.payload.photo ? 0.45 : 0, overlayColor: '#000000', ...action.payload }
+        : null;
+    },
+    setBackgroundOverlay(state, action) {
+      if (!state.background) return;
+      record(state, 'bg-overlay');
+      Object.assign(state.background, action.payload);
     },
     addText: {
       prepare: (patch) => ({ payload: makeText(patch) }),
@@ -340,6 +349,7 @@ export const {
   setCanvasSize,
   setCanvasFill,
   setBackground,
+  setBackgroundOverlay,
   addText,
   addImage,
   addIcon,

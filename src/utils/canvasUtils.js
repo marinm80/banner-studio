@@ -6,9 +6,19 @@ export const LINE_HEIGHT = 1.2;
 export function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    // Required so the canvas stays untainted and the export can be downloaded.
+    // Hosts that don't send CORS headers fail here rather than silently
+    // breaking the download later, which is why the message says what to do.
     img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error('One of the images in this banner could not be loaded.'));
+    img.onerror = () =>
+      reject(
+        new Error(
+          /^https?:/i.test(src)
+            ? 'That image could not be loaded. The site hosting it may not allow other sites to use it — download the picture and use “Upload your own background” instead.'
+            : 'One of the images in this banner could not be loaded.'
+        )
+      );
     img.src = src;
   });
 }
@@ -206,6 +216,13 @@ export async function renderBanner({ canvas: size, background, layers }) {
   if (background?.url) {
     const img = await loadImage(background.url);
     drawCover(ctx, img, size.width, size.height);
+    if (background.overlay > 0) {
+      ctx.save();
+      ctx.globalAlpha = background.overlay;
+      ctx.fillStyle = background.overlayColor || '#000000';
+      ctx.fillRect(0, 0, size.width, size.height);
+      ctx.restore();
+    }
   }
 
   await waitForLayerFonts(layers);

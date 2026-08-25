@@ -155,12 +155,23 @@ export default function CanvasEditor() {
             }}
           >
             {background?.url && (
-              <img
-                src={background.url}
-                alt=""
-                draggable={false}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-              />
+              <>
+                <img
+                  src={background.url}
+                  alt=""
+                  draggable={false}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                />
+                {background.overlay > 0 && (
+                  <div
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background: background.overlayColor || '#000000',
+                      opacity: background.overlay,
+                    }}
+                  />
+                )}
+              </>
             )}
 
             {showGrid && (

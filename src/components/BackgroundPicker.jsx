@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadBackgrounds, setTheme, setPage } from '../features/backgrounds/backgroundsSlice';
-import { setBackground } from '../features/editor/editorSlice';
+import { setBackground, setBackgroundOverlay } from '../features/editor/editorSlice';
 
 const THEMES = [
   'all',
+  'photos',
   'technology',
   'atc',
   'web development',
@@ -46,6 +47,7 @@ export default function BackgroundPicker() {
   const { theme, page, limit, total, items, status, error } = useSelector((s) => s.backgrounds);
   const background = useSelector((s) => s.editor.background);
   const [query, setQuery] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     dispatch(loadBackgrounds({ theme, page, limit }));
@@ -57,7 +59,7 @@ export default function BackgroundPicker() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => dispatch(setBackground({ source: 'upload', url: reader.result }));
+    reader.onload = () => dispatch(setBackground({ source: 'upload', url: reader.result, photo: true }));
     reader.readAsDataURL(file);
     e.target.value = '';
   };
@@ -112,9 +114,19 @@ export default function BackgroundPicker() {
         {items.map((b) => (
           <button
             key={b.id}
-            title={b.label}
-            onClick={() => dispatch(setBackground({ source: 'api', id: b.id, url: b.url }))}
-            className={`overflow-hidden rounded border ${
+            title={b.credit ? `${b.label} — ${b.credit}` : b.label}
+            onClick={() =>
+              dispatch(
+                setBackground({
+                  source: 'api',
+                  id: b.id,
+                  url: b.url,
+                  photo: b.theme === 'photo',
+                  credit: b.credit,
+                })
+              )
+            }
+            className={`overflow-hidden rounded border text-left ${
               background?.id === b.id
                 ? 'border-cyan-400 ring-1 ring-cyan-400'
                 : 'border-slate-700 hover:border-slate-400'
@@ -126,6 +138,11 @@ export default function BackgroundPicker() {
               loading="lazy"
               className="aspect-[3/1] w-full object-cover"
             />
+            {b.credit && (
+              <span className="block truncate px-1 py-0.5 text-[9px] text-slate-500">
+                {b.credit}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -151,6 +168,36 @@ export default function BackgroundPicker() {
           Next →
         </button>
       </div>
+
+      {background?.url && (
+        <div className="mt-4 border-t border-slate-800 pt-3">
+          <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+            Dim the background · {Math.round((background.overlay || 0) * 100)}%
+          </p>
+          <p className="mb-2 text-[10px] leading-relaxed text-slate-500">
+            Darken the picture so your name stands out. Photos usually need this.
+          </p>
+          <div className="flex items-center gap-2">
+            <input
+              type="range"
+              min="0"
+              max="0.85"
+              step="0.05"
+              className="w-full accent-cyan-500"
+              value={background.overlay || 0}
+              onChange={(e) => dispatch(setBackgroundOverlay({ overlay: +e.target.value }))}
+              aria-label="Background dimming"
+            />
+            <input
+              type="color"
+              className="h-7 w-9 shrink-0 cursor-pointer rounded border border-slate-700 bg-slate-800"
+              value={background.overlayColor || '#000000'}
+              onChange={(e) => dispatch(setBackgroundOverlay({ overlayColor: e.target.value }))}
+              aria-label="Dimming color"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="mt-4 border-t border-slate-800 pt-3">
         <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
@@ -190,7 +237,33 @@ export default function BackgroundPicker() {
           Upload your own background (JPG / PNG)
           <input type="file" accept="image/*" className="hidden" onChange={onUpload} />
         </label>
-        {background?.source === 'upload' && (
+
+        <form
+          className="mt-2 flex gap-1"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const url = imageUrl.trim();
+            if (!/^https?:\/\//i.test(url)) return;
+            dispatch(setBackground({ source: 'url', url, photo: true }));
+            setImageUrl('');
+          }}
+        >
+          <input
+            className={inputCls}
+            placeholder="…or paste an image link"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            aria-label="Background image URL"
+          />
+          <button className="rounded bg-slate-700 px-3 text-sm text-white hover:bg-slate-600">
+            Use
+          </button>
+        </form>
+        <p className="mt-1 text-[10px] leading-relaxed text-slate-500">
+          Works with any picture the site allows other sites to use — Unsplash links do. If it does
+          not load, download the picture and upload it above.
+        </p>
+        {(background?.source === 'upload' || background?.source === 'url') && (
           <p className="mt-1 text-[11px] text-emerald-400">Using your own image ✓</p>
         )}
         {background && (

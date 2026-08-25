@@ -504,11 +504,64 @@ const GENERATORS = [
   { key: 'mesh', label: 'Gradient mesh', theme: 'general', tags: ['gradient', 'mesh', 'soft', 'modern'], pals: ['pastel', 'mint', 'sand', 'violet'], draw: mesh },
 ];
 
+/* ── Photographs ────────────────────────────────────────────────────────── */
+
+// Free photos from Unsplash, referenced by their CDN id. They are hotlinked
+// rather than bundled, which is what the Unsplash License asks for, and the CDN
+// sends CORS headers so the canvas export still works. Photographers are
+// credited on every thumbnail.
+const PHOTOS = [
+  // Network Support Services
+  ['photo-1544197150-b99a580bb7a8', 'Jordan Harrison', 'Blue network cable', 'network cables ethernet support infrastructure'],
+  ['photo-1558494949-ef010cbdcc31', 'Taylor Vick', 'Patch panel', 'network cables datacenter support infrastructure'],
+  ['photo-1683322499436-f4383dd59f5a', 'Scott Rodgerson', 'Blue patch cords', 'network cables support infrastructure'],
+  ['photo-1545987796-200677ee1011', 'Alina Grubnyak', 'Steel lattice', 'network structure abstract geometry'],
+  ['photo-1644088379091-d574269d422f', 'Conny Schneider', 'Blue nodes', 'network nodes abstract data connections'],
+  ['photo-1644325349124-d1756b79dd42', 'Conny Schneider', 'Blue mesh', 'network nodes abstract data connections'],
+  ['photo-1597733336794-12d05021d510', 'JJ Ying', 'Digital waves', 'network abstract technology gradient'],
+  ['photo-1655993810480-c15dccf9b3a0', 'D koi', 'Wireframe sphere', 'network abstract geometry 3d'],
+  ['photo-1542382257-80dedb725088', 'Nastya Dulhiier', 'City at night', 'network connections city general'],
+  // Cloud Computing
+  ['photo-1667984390538-3dea7a3fe33d', 'Growtika', 'Cloud concept render', 'cloud computing servers devops 3d'],
+  ['photo-1667984390535-6d03cff0b11a', 'Growtika', 'Server tower', 'cloud computing servers hardware devops'],
+  ['photo-1667984390553-7f439e6ae401', 'Growtika', 'Cloud diagram', 'cloud computing architecture devops'],
+  ['photo-1548092372-0d1bd40894a3', 'Philipp Katzenberger', 'Blue laptop', 'cloud computing security general'],
+  ['photo-1535557597501-0fee0a500c57', 'An Tran', 'White clouds', 'cloud sky general soft light'],
+  ['photo-1697577418970-95d99b5a55cf', 'Igor Omilaev', 'Processor chip', 'cloud computing hardware ai chip'],
+  // Web Development
+  ['photo-1498050108023-c5249f4df085', 'Christopher Gower', 'Laptop with code', 'web development code programming desk'],
+  ['photo-1593720213428-28a5b9e94613', 'Ferenc Almasi', 'Code on screen', 'web development code programming dark'],
+  ['photo-1461749280684-dccba630e2f6', 'Ilya Pavlov', 'Code monitor', 'web development code programming'],
+  ['photo-1484417894907-623942c8ee29', 'Emile Perron', 'Colorful code', 'web development code programming'],
+  ['photo-1624996752380-8ec242e0f85d', 'Michael Baccin', 'PHP on screen', 'web development code programming php dark'],
+  // Database Application Development / data centers
+  ['photo-1584169417032-d34e8d805e8b', 'İsmail Enes Ayhan', 'Server room aisle', 'database datacenter servers storage'],
+  ['photo-1564457461758-8ff96e439e83', 'Taylor Vick', 'Server racks', 'database datacenter servers storage'],
+  ['photo-1506399558188-acca6f8cbf41', 'imgix', 'Rows of servers', 'database datacenter servers storage'],
+  ['photo-1695668548342-c0c1ad479aee', 'Kevin Ache', 'Server rack', 'database datacenter servers storage'],
+  ['photo-1488229297570-58520851e868', 'Joshua Sortino', 'Server ceiling', 'database datacenter servers abstract'],
+];
+
+const photoUrl = (id, w, q) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=${q}`;
+
 let CATALOG = null;
 
 function buildCatalog() {
   if (CATALOG) return CATALOG;
   CATALOG = [];
+  PHOTOS.forEach(([id, author, label, tags]) => {
+    CATALOG.push({
+      id: `ph_${id}`,
+      url: photoUrl(id, 1800, 80),
+      thumbnailUrl: photoUrl(id, 400, 60),
+      theme: 'photo',
+      label,
+      credit: `Photo by ${author} on Unsplash`,
+      tags: `photo photograph ${tags}`.split(' '),
+      license: 'Unsplash',
+    });
+  });
   GENERATORS.forEach((g, gi) => {
     g.pals.forEach((palId, k) => {
       const p = PALETTES[palId];
@@ -547,6 +600,7 @@ export async function fetchBackgrounds({ theme = 'all', page = 1, limit = 12 } =
   if (!q || q === 'all') filtered = all;
   else if (['technology', 'tech', 'it'].includes(q)) filtered = all.filter((b) => b.theme === 'technology');
   else if (q === 'general') filtered = all.filter((b) => b.theme === 'general');
+  else if (['photo', 'photos'].includes(q)) filtered = all.filter((b) => b.theme === 'photo');
   else filtered = all.filter((b) => b.tags.some((t) => norm(t).includes(q)) || norm(b.label).includes(q));
 
   // Simulated latency so the async flow matches a real remote API.
