@@ -1,3 +1,8 @@
+// The starter templates, grouped by discipline. Applying one replaces the
+// canvas, background and layers wholesale as a single undoable step, so trying
+// one costs nothing. `compact` is the wide grid used in the welcome dialog;
+// the default is the narrow column used in the library panel.
+
 import { useDispatch } from 'react-redux';
 import { applyTemplate } from '../features/editor/editorSlice';
 import { TEMPLATES, TEMPLATE_GROUPS, buildTemplate, templatePreview } from '../data/templates';

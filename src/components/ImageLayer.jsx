@@ -1,3 +1,7 @@
+// An uploaded picture as a layer. Only the width is ever set — the height
+// follows the image's own aspect ratio, here and in the export alike.
+// Mirrored by drawImageLayer in canvasUtils.
+
 import { useRef } from 'react';
 
 export default function ImageLayer({ layer, selected, onStartDrag }) {

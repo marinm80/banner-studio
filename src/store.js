@@ -1,3 +1,12 @@
+// The Redux store and the autosave wiring.
+//
+// Three slices: `editor` (the banner itself, plus its undo history),
+// `backgrounds` (the background catalog) and `icons` (icons the user added).
+//
+// Saved work is restored at import time — before React mounts — so App can ask
+// `hadSavedWork` whether this is a first visit, and written back on a 500ms
+// debounce after every dispatch.
+
 import { configureStore } from '@reduxjs/toolkit';
 import editorReducer, { hydrate } from './features/editor/editorSlice';
 import backgroundsReducer from './features/backgrounds/backgroundsSlice';

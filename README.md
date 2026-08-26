@@ -2,6 +2,7 @@
 
 **▶ Use it here: <https://banner-studio.rafaelmarin.dev>** — no install, no sign-up.
 Mirror: <https://marinm80.github.io/banner-studio/>
+More of my projects: <https://rafaelmarin.dev>
 
 A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
 starting out in Information Technology and want a decent-looking cover image without learning
@@ -131,3 +132,5 @@ Add an entry to `TEMPLATES` in `src/data/templates.js` with a `backgroundId` fro
 Questions, ideas, bugs, or a request for another icon or template:
 
 **euclidesm195@gmail.com**
+
+More of my projects: **<https://rafaelmarin.dev>**

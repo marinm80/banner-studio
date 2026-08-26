@@ -1,3 +1,6 @@
+// How-to dialog: the five steps to a finished banner, plus the things people
+// otherwise never find — undo, the highlight box, arrow-key nudging.
+
 import ContactCard from './ContactCard';
 
 const STEPS = [

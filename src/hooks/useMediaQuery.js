@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-
 // Layout decisions that CSS alone cannot make — such as whether the side
 // panels are docked or live in a drawer — need the breakpoint in JS too.
+
+import { useEffect, useState } from 'react';
+
 export default function useMediaQuery(query) {
   const [matches, setMatches] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(query).matches

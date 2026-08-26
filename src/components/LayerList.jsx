@@ -1,9 +1,13 @@
+// Everything on the banner, topmost first. Clicking a row selects that layer
+// for the properties panel; the row buttons restack and delete it.
+
 import { useDispatch, useSelector } from 'react-redux';
 import { moveLayer, selectLayer, removeLayer } from '../features/editor/editorSlice';
 
 const iconBtn =
   'grid h-7 w-7 shrink-0 place-items-center rounded border border-slate-700 text-xs text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-30';
 
+// One-glyph type marker, so a row stays readable in a 288px-wide panel.
 const TYPE_BADGE = { text: 'T', image: '🖼', icon: '★', terminal: '>_' };
 
 function summary(layer) {

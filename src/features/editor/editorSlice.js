@@ -1,3 +1,13 @@
+// The banner. Canvas size, background, the layer array, the selection and the
+// undo history all live here; every panel reads this slice and dispatches to
+// it.
+//
+// Two things to know before changing a reducer:
+//   - Array order is stacking order — layers[last] is drawn on top.
+//   - Anything that mutates calls record() first to push an undo snapshot.
+//     Pass a coalesce key for continuous edits (a drag, a slider) so a burst
+//     collapses into one undo step instead of hundreds.
+
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 import { ICON_BY_ID } from '../../data/icons';
 

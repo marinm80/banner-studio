@@ -1,3 +1,7 @@
+// The three library tabs and the panel each one shows. Shared by both layouts:
+// docked in the left sidebar on a wide screen, inside the drawer on a narrow
+// one — so the tabs and their content only exist in one place.
+
 import TemplateGallery from './TemplateGallery';
 import BackgroundPicker from './BackgroundPicker';
 import IconPicker from './IconPicker';

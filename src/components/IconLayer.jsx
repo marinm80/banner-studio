@@ -1,3 +1,7 @@
+// An icon layer: the SVG (or an uploaded bitmap) and its optional circular or
+// square backdrop, both sized off the icon so they scale together. Mirrored by
+// drawIconLayer in canvasUtils.
+
 import { useRef } from 'react';
 import { iconSrc } from '../utils/canvasUtils';
 

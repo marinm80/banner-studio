@@ -1,3 +1,10 @@
+// The icon library: search and category filter across the built-in set plus
+// the user's own, and the form for adding more (upload a file or paste SVG).
+//
+// Clicking an icon drops it on the banner; successive drops step along a grid
+// so several clicks stay visible instead of stacking on one spot. Added icons
+// live in the icons slice and are saved along with the banner.
+
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICONS, ICON_CATEGORIES, iconDataUri, searchIcons } from '../data/icons';
@@ -14,6 +21,8 @@ const chip = (active) =>
       : 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-500'
   }`;
 
+// Pasted markup is stored as a data URI rather than injected into the page, so
+// it renders in an <img> and cannot execute any script it happens to contain.
 const svgToDataUri = (svg) => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 
 export default function IconPicker() {

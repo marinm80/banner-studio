@@ -1,3 +1,6 @@
+// Banner dimensions and the base color painted behind everything else. The
+// presets in the top bar cover the usual sizes; this is for anything else.
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setCanvasSize, setCanvasFill } from '../features/editor/editorSlice';
 

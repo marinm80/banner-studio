@@ -1,3 +1,11 @@
+// Background chooser: the catalog with search, paging and a dimming slider,
+// plus solid colors, an upload and a paste-a-link field.
+//
+// Catalog state (theme, page, results) lives in the backgrounds slice; the
+// chosen background is written to the editor slice. A remote image has to be
+// readable cross-origin or the canvas export cannot produce a downloadable
+// file — which is why the copy nudges people to upload when a link fails.
+
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadBackgrounds, setTheme, setPage } from '../features/backgrounds/backgroundsSlice';
@@ -71,6 +79,8 @@ export default function BackgroundPicker() {
         Search a topic, pick a solid color, or upload your own image.
       </p>
 
+      {/* Searching and picking a chip are the same action: the catalog treats a
+          free-text topic as just another theme, so both set `theme`. */}
       <form
         className="mb-2 flex gap-1"
         onSubmit={(e) => {

@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
-
 // A panel docked below the canvas on narrow screens. It pushes the canvas up
 // rather than covering it, so the banner stays visible — and shrinks — while a
 // panel is open. The height cap always leaves the canvas enough room to show a
 // banner, even on a landscape phone.
+
+import { useEffect } from 'react';
+
 export default function PanelSheet({ title, onClose, children, footer }) {
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();

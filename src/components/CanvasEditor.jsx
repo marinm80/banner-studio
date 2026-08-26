@@ -1,3 +1,12 @@
+// The banner as you see and edit it: zoom bar, the scaled artboard, the
+// background, the layers, and the grid and safe-area overlays.
+//
+// Layers are positioned in real banner pixels and the whole artboard is
+// CSS-scaled to fit, so pointer deltas get divided by that scale to convert
+// back into banner coordinates. `fitScale` comes from a ResizeObserver on the
+// content box, which is what makes the banner refit itself when a drawer opens
+// or the window changes. One drag handler here serves all four layer types.
+
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLayer, updateLayer, removeLayer } from '../features/editor/editorSlice';

@@ -1,3 +1,12 @@
+// Top-level layout. Picks one of the two shells and owns the state that
+// crosses panels: which library tab is showing, which drawer is open on a
+// narrow screen, and which modal is up.
+//
+//   1280px and up   library docked left, canvas centre, design panel right
+//   below 1280px    canvas full width, panels in a drawer under a tab bar
+//
+// The banner itself lives in Redux (features/editor), not here.
+
 import { useEffect, useState } from 'react';
 import Toolbar from './components/Toolbar';
 import CanvasEditor from './components/CanvasEditor';

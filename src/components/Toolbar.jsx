@@ -1,3 +1,11 @@
+// The top bar: add a layer, undo/redo, the view toggles, the banner size and
+// Download. Dispatches straight to the editor slice; the modals it opens are
+// owned by App.
+//
+// One set of buttons serves both layouts. At xl everything sits inline; below
+// that the add buttons drop to a row of their own and the secondary controls
+// move into the "⋯" menu, so the header never pushes the page sideways.
+
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -54,6 +62,9 @@ export default function Toolbar({ onExport, onHelp, onOpenIcons }) {
     e.target.value = '';
   };
 
+  // The dropdown reflects the canvas rather than owning it, since the size can
+  // also be typed in by hand — hence the extra "custom" option when the current
+  // dimensions match no preset.
   const presetId =
     CANVAS_PRESETS.find((p) => p.width === canvas.width && p.height === canvas.height)?.id ||
     'custom';

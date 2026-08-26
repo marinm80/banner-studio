@@ -1,3 +1,12 @@
+// The renderer — and the single source of truth for what a banner looks like.
+//
+// Every layer type is drawn twice in this project: as DOM in the editor
+// (components/*Layer.jsx) and onto a canvas here for the export. The two have
+// to agree pixel for pixel, so a change to any geometry — text metrics,
+// terminal padding, icon backdrops — belongs in both places. The measurements
+// they share (LINE_HEIGHT, terminalMetrics) are exported from here and
+// imported by the DOM components precisely so they cannot drift apart.
+
 import { waitForLayerFonts } from './fonts';
 import { iconDataUri } from '../data/icons';
 
@@ -126,6 +135,8 @@ function drawImageLayer(ctx, layer, img) {
   });
 }
 
+// The badge multipliers here (0.78 radius, 1.44 box) have to stay identical to
+// the ones in components/IconLayer.jsx, or the backdrop shifts on export.
 function drawIconLayer(ctx, layer, img) {
   const s = layer.size;
   withTransform(ctx, layer, s, s, () => {

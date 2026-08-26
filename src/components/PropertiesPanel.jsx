@@ -1,3 +1,11 @@
+// Editor for the selected layer. Shows the fields for its type — text, image,
+// icon or terminal — then the position, opacity and rotation controls every
+// type shares, then reorder, duplicate and delete.
+//
+// Every control dispatches updateLayer. Continuous inputs coalesce into a
+// single undo step; discrete ones pass coalesce=false so each click can be
+// undone on its own.
+
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLayer, removeLayer, duplicateLayer, moveLayer } from '../features/editor/editorSlice';
 import { FONTS } from '../utils/fonts';
@@ -62,6 +70,9 @@ export default function PropertiesPanel() {
     );
   }
 
+  // coalesce=true merges a run of edits to the same field into one undo step,
+  // which is what you want while dragging a slider or typing. Discrete choices
+  // (an alignment button, a backdrop shape) pass false so each is its own step.
   const set = (patch, coalesce = true) => dispatch(updateLayer({ id: layer.id, patch, coalesce }));
   const setShadow = (patch) => set({ shadow: patch });
   const setBox = (patch) => set({ box: patch });

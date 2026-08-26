@@ -1,11 +1,13 @@
+// The right-hand column on a wide screen; the "Design" drawer on a narrow one.
+// Groups the three panels that act on the banner as a whole and the selected
+// layer. The contact card rides along in both, since a narrow screen has no
+// footer to put it in.
+
 import CanvasSettings from './CanvasSettings';
 import LayerList from './LayerList';
 import PropertiesPanel from './PropertiesPanel';
 import ContactCard from './ContactCard';
 
-// The right-hand column on a wide screen; the "Design" drawer on a narrow one.
-// The contact card rides along in both, since a narrow screen has no footer to
-// put it in.
 export default function DesignPanel() {
   return (
     <>

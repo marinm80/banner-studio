@@ -1,3 +1,8 @@
+// The fake terminal window: frame, optional title bar with traffic lights, and
+// the command lines. A line starting with "$" is drawn in the prompt color.
+// Geometry comes from terminalMetrics so the editor and the export agree.
+// Mirrored by drawTerminalLayer in canvasUtils.
+
 import { useRef } from 'react';
 import { terminalMetrics } from '../utils/canvasUtils';
 

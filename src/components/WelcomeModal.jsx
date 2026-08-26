@@ -1,3 +1,7 @@
+// First-run dialog, shown only when there is no saved work (App reads
+// `hadSavedWork` from the store). Starting from a template is far easier than
+// starting from an empty canvas, so that is what it offers.
+
 import TemplateGallery from './TemplateGallery';
 
 export default function WelcomeModal({ onClose, onHelp }) {

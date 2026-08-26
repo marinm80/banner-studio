@@ -1,3 +1,9 @@
+// The download dialog. It re-renders the banner through the real exporter on a
+// short debounce, so the preview *is* the file rather than an approximation of
+// it, and the reported size is the real one. It also calls out the mistakes
+// people actually make: no background, no text, or a layer still reading
+// "Your Name".
+
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setExportSettings } from '../features/editor/editorSlice';
@@ -36,6 +42,8 @@ export default function ExportModal({ onClose }) {
   if (layers.some((l) => l.type === 'text' && /your name/i.test(l.text)))
     warnings.push('One layer still says “Your Name” — remember to put yours in.');
 
+  // Size of the actual file, derived from the base64 payload: every 4 characters
+  // after the "data:...;base64," prefix encode 3 bytes.
   const sizeKb = preview
     ? Math.round(((preview.length - preview.indexOf(',') - 1) * 0.75) / 1024)
     : null;
