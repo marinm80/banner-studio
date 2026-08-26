@@ -1,3 +1,8 @@
+// The starter templates, grouped by discipline. Applying one replaces the
+// canvas, background and layers wholesale as a single undoable step, so trying
+// one costs nothing. `compact` is the wide grid used in the welcome dialog;
+// the default is the narrow column used in the library panel.
+
 import { useDispatch } from 'react-redux';
 import { applyTemplate } from '../features/editor/editorSlice';
 import { TEMPLATES, TEMPLATE_GROUPS, buildTemplate, templatePreview } from '../data/templates';
@@ -26,7 +31,9 @@ export default function TemplateGallery({ onApplied, compact = false }) {
           <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-cyan-400">
             {group}
           </h3>
-          <div className={compact ? 'grid grid-cols-2 gap-3 md:grid-cols-3' : 'space-y-2'}>
+          <div className={compact
+                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3'
+                : 'grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-1'}>
             {TEMPLATES.filter((t) => t.group === group).map((t) => (
               <button
                 key={t.id}

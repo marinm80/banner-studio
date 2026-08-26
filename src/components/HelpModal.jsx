@@ -1,3 +1,6 @@
+// How-to dialog: the five steps to a finished banner, plus the things people
+// otherwise never find — undo, the highlight box, arrow-key nudging.
+
 import ContactCard from './ContactCard';
 
 const STEPS = [
@@ -19,14 +22,14 @@ const TIPS = [
 export default function HelpModal({ onClose }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-2 sm:p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Help"
     >
       <div
-        className="max-h-full w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-700 bg-slate-900 p-6"
+        className="modal-cap w-full max-w-2xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between">

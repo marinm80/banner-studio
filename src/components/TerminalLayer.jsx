@@ -1,3 +1,8 @@
+// The fake terminal window: frame, optional title bar with traffic lights, and
+// the command lines. A line starting with "$" is drawn in the prompt color.
+// Geometry comes from terminalMetrics so the editor and the export agree.
+// Mirrored by drawTerminalLayer in canvasUtils.
+
 import { useRef } from 'react';
 import { terminalMetrics } from '../utils/canvasUtils';
 
@@ -9,7 +14,7 @@ export default function TerminalLayer({ layer, selected, onStartDrag }) {
     <div
       ref={ref}
       onPointerDown={(e) => onStartDrag(e, layer, ref.current)}
-      className={`absolute cursor-move select-none ${
+      className={`absolute cursor-move touch-none select-none ${
         selected
           ? 'outline-dashed outline-1 outline-cyan-400/80'
           : 'hover:outline-dashed hover:outline-1 hover:outline-slate-400/50'

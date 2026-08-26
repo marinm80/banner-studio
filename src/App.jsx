@@ -1,85 +1,141 @@
+// Top-level layout. Picks one of the two shells and owns the state that
+// crosses panels: which library tab is showing, which drawer is open on a
+// narrow screen, and which modal is up.
+//
+//   1280px and up   library docked left, canvas centre, design panel right
+//   below 1280px    canvas full width, panels in a drawer under a tab bar
+//
+// The banner itself lives in Redux (features/editor), not here.
+
 import { useEffect, useState } from 'react';
 import Toolbar from './components/Toolbar';
-import BackgroundPicker from './components/BackgroundPicker';
-import IconPicker from './components/IconPicker';
-import TemplateGallery from './components/TemplateGallery';
 import CanvasEditor from './components/CanvasEditor';
-import CanvasSettings from './components/CanvasSettings';
-import LayerList from './components/LayerList';
-import PropertiesPanel from './components/PropertiesPanel';
+import LibraryPanel, { LibraryTabs } from './components/LibraryPanel';
+import DesignPanel from './components/DesignPanel';
+import PanelSheet from './components/PanelSheet';
 import ExportModal from './components/ExportModal';
 import HelpModal from './components/HelpModal';
 import WelcomeModal from './components/WelcomeModal';
 import ContactCard from './components/ContactCard';
+import useMediaQuery, { DOCKED_PANELS } from './hooks/useMediaQuery';
 import { injectGoogleFonts } from './utils/fonts';
 import { hadSavedWork } from './store';
 
-const TABS = [
-  ['templates', 'Templates'],
-  ['backgrounds', 'Backgrounds'],
-  ['icons', 'Icons'],
+// The four things the bottom bar can open on a narrow screen. The first three
+// are the library tabs; "Design" is the whole right-hand column.
+const SHEETS = [
+  ['templates', 'Templates', '▦'],
+  ['backgrounds', 'Backgrounds', '◧'],
+  ['icons', 'Icons', '★'],
+  // U+FE0E keeps the gear a glyph instead of a colour emoji on Apple platforms.
+  ['design', 'Design', '\u2699\uFE0E'],
 ];
 
 export default function App() {
   const [tab, setTab] = useState('templates');
+  const [sheet, setSheet] = useState(null); // narrow screens only
   const [exportOpen, setExportOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [welcomeOpen, setWelcomeOpen] = useState(!hadSavedWork);
+  const docked = useMediaQuery(DOCKED_PANELS);
 
   useEffect(() => {
     injectGoogleFonts();
   }, []);
 
+  // Coming back to a wide window with a drawer open would leave it stranded
+  // on top of the docked panels.
+  useEffect(() => {
+    if (docked) setSheet(null);
+  }, [docked]);
+
+  const openLibrary = (id) => {
+    setTab(id);
+    if (!docked) setSheet(id);
+  };
+
   return (
-    <div className="flex h-screen flex-col bg-slate-950 text-slate-100">
+    <div className="app-shell flex flex-col bg-slate-950 text-slate-100">
       <Toolbar
         onExport={() => setExportOpen(true)}
         onHelp={() => setHelpOpen(true)}
-        onOpenIcons={() => setTab('icons')}
+        onOpenIcons={() => openLibrary('icons')}
       />
 
       <div className="flex min-h-0 flex-1">
-        <aside className="flex w-80 shrink-0 flex-col border-r border-slate-800 bg-slate-900/60">
-          <nav className="flex shrink-0 border-b border-slate-800">
-            {TABS.map(([id, label]) => (
-              <button
-                key={id}
-                onClick={() => setTab(id)}
-                className={`flex-1 px-2 py-2 text-xs font-medium ${
-                  tab === id
-                    ? 'border-b-2 border-cyan-500 text-cyan-300'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            {tab === 'templates' && <TemplateGallery />}
-            {tab === 'backgrounds' && <BackgroundPicker />}
-            {tab === 'icons' && <IconPicker />}
-          </div>
-        </aside>
+        {docked && (
+          <aside className="flex w-72 shrink-0 flex-col border-r border-slate-800 bg-slate-900/60 2xl:w-80">
+            <LibraryTabs tab={tab} onChange={setTab} />
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <LibraryPanel tab={tab} />
+            </div>
+          </aside>
+        )}
 
-        <main className="min-w-0 flex-1">
+        <main className="min-h-0 min-w-0 flex-1">
           <CanvasEditor />
         </main>
 
-        <aside className="w-80 shrink-0 overflow-y-auto border-l border-slate-800 bg-slate-900/60">
-          <CanvasSettings />
-          <LayerList />
-          <PropertiesPanel />
-          <div className="p-4 pt-0">
-            <ContactCard />
-          </div>
-        </aside>
+        {docked && (
+          <aside className="w-72 shrink-0 overflow-y-auto border-l border-slate-800 bg-slate-900/60 2xl:w-80">
+            <DesignPanel />
+          </aside>
+        )}
       </div>
 
-      <footer className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-slate-800 bg-slate-900 px-4 py-1.5 text-[11px] text-slate-500">
-        <span>Your work saves automatically in this browser — nothing is uploaded anywhere.</span>
-        <ContactCard compact />
-      </footer>
+      {!docked && sheet === 'design' && (
+        <PanelSheet title="Design" onClose={() => setSheet(null)}>
+          <DesignPanel />
+          <p className="px-4 pb-4 text-[11px] leading-relaxed text-slate-500">
+            Your work saves automatically in this browser — nothing is uploaded anywhere.
+          </p>
+        </PanelSheet>
+      )}
+      {!docked && sheet && sheet !== 'design' && (
+        <PanelSheet
+          title="Library"
+          onClose={() => setSheet(null)}
+          footer={
+            <LibraryTabs
+              tab={tab}
+              onChange={(id) => {
+                setTab(id);
+                setSheet(id);
+              }}
+            />
+          }
+        >
+          <LibraryPanel tab={tab} />
+        </PanelSheet>
+      )}
+
+      {docked ? (
+        <footer className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-slate-800 bg-slate-900 px-4 py-1.5 text-[11px] text-slate-500">
+          <span>Your work saves automatically in this browser — nothing is uploaded anywhere.</span>
+          <ContactCard compact />
+        </footer>
+      ) : (
+        <nav className="safe-bottom flex shrink-0 border-t border-slate-800 bg-slate-900">
+          {SHEETS.map(([id, label, glyph]) => (
+            <button
+              key={id}
+              onClick={() => {
+                if (id !== 'design') setTab(id);
+                setSheet((s) => (s === id ? null : id));
+              }}
+              aria-pressed={sheet === id}
+              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium ${
+                sheet === id ? 'text-cyan-300' : 'text-slate-400'
+              }`}
+            >
+              <span aria-hidden className="text-base leading-none">
+                {glyph}
+              </span>
+              {label}
+            </button>
+          ))}
+        </nav>
+      )}
 
       {welcomeOpen && (
         <WelcomeModal

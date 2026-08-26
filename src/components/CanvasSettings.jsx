@@ -1,3 +1,6 @@
+// Banner dimensions and the base color painted behind everything else. The
+// presets in the top bar cover the usual sizes; this is for anything else.
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setCanvasSize, setCanvasFill } from '../features/editor/editorSlice';
 
@@ -49,8 +52,8 @@ export default function CanvasSettings() {
         </label>
       </div>
       <p className="mt-2 text-[10px] leading-relaxed text-slate-500">
-        1584 × 396 is the size LinkedIn uses for a profile cover. Use the dropdown in the top bar
-        for other presets.
+        1584 × 396 is the size LinkedIn uses for a profile cover. The top bar has presets for the
+        other common sizes.
       </p>
     </div>
   );

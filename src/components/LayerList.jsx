@@ -1,9 +1,13 @@
+// Everything on the banner, topmost first. Clicking a row selects that layer
+// for the properties panel; the row buttons restack and delete it.
+
 import { useDispatch, useSelector } from 'react-redux';
 import { moveLayer, selectLayer, removeLayer } from '../features/editor/editorSlice';
 
 const iconBtn =
-  'rounded border border-slate-700 px-1.5 text-xs text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-30';
+  'grid h-7 w-7 shrink-0 place-items-center rounded border border-slate-700 text-xs text-slate-400 hover:bg-slate-700 hover:text-white disabled:opacity-30';
 
+// One-glyph type marker, so a row stays readable in a 288px-wide panel.
 const TYPE_BADGE = { text: 'T', image: '🖼', icon: '★', terminal: '>_' };
 
 function summary(layer) {
@@ -34,7 +38,7 @@ export default function LayerList() {
               tabIndex={0}
               onClick={() => dispatch(selectLayer(l.id))}
               onKeyDown={(e) => e.key === 'Enter' && dispatch(selectLayer(l.id))}
-              className={`flex cursor-pointer items-center gap-2 rounded border px-2 py-1.5 text-xs ${
+              className={`flex cursor-pointer items-center gap-1.5 rounded border px-2 py-1.5 text-xs ${
                 l.id === selectedId
                   ? 'border-cyan-500 bg-cyan-500/10'
                   : 'border-slate-800 bg-slate-900 hover:border-slate-600'
@@ -70,7 +74,7 @@ export default function LayerList() {
                 ↓
               </button>
               <button
-                className="rounded border border-slate-700 px-1.5 text-xs text-slate-400 hover:bg-red-900 hover:text-white"
+                className="grid h-7 w-7 shrink-0 place-items-center rounded border border-slate-700 text-xs text-slate-400 hover:bg-red-900 hover:text-white"
                 title="Delete layer"
                 onClick={(e) => {
                   e.stopPropagation();

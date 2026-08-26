@@ -1,3 +1,6 @@
+// A text layer in the editor. Mirrored by drawTextLayer in canvasUtils — keep
+// the two in step or the download stops matching the preview.
+
 import { useRef } from 'react';
 import { LINE_HEIGHT } from '../utils/canvasUtils';
 
@@ -10,7 +13,7 @@ export default function TextLayer({ layer, selected, onStartDrag }) {
     <div
       ref={ref}
       onPointerDown={(e) => onStartDrag(e, layer, ref.current)}
-      className={`absolute cursor-move select-none ${
+      className={`absolute cursor-move touch-none select-none ${
         selected
           ? 'outline-dashed outline-1 outline-cyan-400/80'
           : 'hover:outline-dashed hover:outline-1 hover:outline-slate-400/50'

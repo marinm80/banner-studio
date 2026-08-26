@@ -2,6 +2,7 @@
 
 **▶ Use it here: <https://banner-studio.rafaelmarin.dev>** — no install, no sign-up.
 Mirror: <https://marinm80.github.io/banner-studio/>
+More of my projects: <https://rafaelmarin.dev>
 
 A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
 starting out in Information Technology and want a decent-looking cover image without learning
@@ -29,6 +30,13 @@ itself in your own browser between visits.
 - **Export.** JPEG or PNG at exact pixel size, rendered on a canvas so the download matches the
   preview.
 
+## On phones and tablets
+
+The editor works on any screen. At 1280px and wider the library sits on the left, the banner in
+the middle and the design controls on the right. Below that width the banner gets the full width
+and the panels move to a drawer opened from the tab bar at the bottom — the banner stays visible
+above the drawer while you edit, and drag-and-drop works with a finger.
+
 ## Banner sizes
 
 | Preset | Size |
@@ -39,7 +47,8 @@ itself in your own browser between visits.
 | X / Twitter header | 1500 × 500 |
 | GitHub social preview | 1280 × 640 |
 
-Any custom width and height also works — set it in the **Banner size** panel on the right.
+Any custom width and height also works — set it in the **Banner size** panel (on the right on a
+wide screen, under **Design** on a narrow one).
 
 Turn on **Safe area** in the top bar to see the region LinkedIn keeps visible on every device,
 along with the spot where your profile photo covers the banner.
@@ -123,3 +132,5 @@ Add an entry to `TEMPLATES` in `src/data/templates.js` with a `backgroundId` fro
 Questions, ideas, bugs, or a request for another icon or template:
 
 **euclidesm195@gmail.com**
+
+More of my projects: **<https://rafaelmarin.dev>**

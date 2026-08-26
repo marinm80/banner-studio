@@ -1,3 +1,7 @@
+// Paged catalog of backgrounds, loaded through the API-shaped function in
+// backgroundsAPI. Holds the current theme, page and results plus a request
+// status. Choosing one writes to the editor slice, not to this one.
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchBackgrounds } from './backgroundsAPI';
 

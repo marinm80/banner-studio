@@ -1,8 +1,9 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
-
 // Icons the user added themselves. Two flavours are supported:
 //   - svg:  pasted markup, scalable and tintable like the built-in set
 //   - src:  an uploaded PNG/JPG/SVG file stored as a data URI
+
+import { createSlice, nanoid } from '@reduxjs/toolkit';
+
 const initialState = { custom: [] };
 
 const iconsSlice = createSlice({
