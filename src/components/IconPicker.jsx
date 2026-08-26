@@ -94,7 +94,7 @@ export default function IconPicker() {
         ))}
       </div>
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-4">
         {results.map((icon) => (
           <div key={icon.id} className="relative">
             <button

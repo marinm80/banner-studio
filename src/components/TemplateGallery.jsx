@@ -26,7 +26,9 @@ export default function TemplateGallery({ onApplied, compact = false }) {
           <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-cyan-400">
             {group}
           </h3>
-          <div className={compact ? 'grid grid-cols-2 gap-3 md:grid-cols-3' : 'space-y-2'}>
+          <div className={compact
+                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3'
+                : 'grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-1'}>
             {TEMPLATES.filter((t) => t.group === group).map((t) => (
               <button
                 key={t.id}

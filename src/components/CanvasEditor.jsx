@@ -23,18 +23,17 @@ export default function CanvasEditor() {
   const [fitScale, setFitScale] = useState(0.5);
   const [guides, setGuides] = useState({ v: false, h: false });
 
+  // The wrapper's padding is responsive, so measure the content box the
+  // observer reports rather than guessing at a fixed inset.
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    const update = () =>
-      setFitScale(
-        Math.max(
-          0.1,
-          Math.min(1, (el.clientWidth - 48) / canvas.width, (el.clientHeight - 48) / canvas.height)
-        )
-      );
-    update();
-    const ro = new ResizeObserver(update);
+    const fit = (w, h) =>
+      setFitScale(Math.max(0.05, Math.min(1, w / canvas.width, h / canvas.height)));
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) fit(width, height);
+    });
     ro.observe(el);
     return () => ro.disconnect();
   }, [canvas.width, canvas.height]);
@@ -73,9 +72,16 @@ export default function CanvasEditor() {
   // Generic drag for any layer: pointer deltas are converted back to real
   // banner coordinates by dividing by the display scale.
   const startDrag = (e, layer, el) => {
+    if (e.button !== undefined && e.button !== 0) return;
     e.preventDefault();
     dispatch(selectLayer(layer.id));
     if (!el) return;
+    // Capturing keeps the drag alive when the finger or cursor leaves the layer.
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* not fatal — the window listeners below still track the drag */
+    }
     const startX = e.clientX;
     const startY = e.clientY;
     const origX = layer.x;
@@ -105,9 +111,11 @@ export default function CanvasEditor() {
       setGuides({ v: false, h: false });
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
   };
 
   const renderLayer = (l) => {
@@ -120,8 +128,8 @@ export default function CanvasEditor() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-1 border-b border-slate-800 px-4 py-1.5 text-sm">
-        <span className="mr-2 text-xs text-slate-500">Zoom</span>
+      <div className="flex shrink-0 items-center gap-1 border-b border-slate-800 px-2 py-1.5 text-sm sm:px-4">
+        <span className="mr-1 hidden text-xs text-slate-500 sm:inline sm:mr-2">Zoom</span>
         <button className={zoomBtn(zoom === 'fit')} onClick={() => setZoom('fit')}>
           Fit
         </button>
@@ -131,12 +139,15 @@ export default function CanvasEditor() {
           </button>
         ))}
         <div className="flex-1" />
-        <span className="text-xs text-slate-500">
-          {canvas.width} × {canvas.height} px · showing {Math.round(scale * 100)}%
+        <span className="truncate text-xs text-slate-500">
+          <span className="hidden sm:inline">
+            {canvas.width} × {canvas.height} px ·{' '}
+          </span>
+          {Math.round(scale * 100)}%
         </span>
       </div>
 
-      <div ref={wrapRef} className="flex flex-1 overflow-auto bg-slate-950 p-6">
+      <div ref={wrapRef} className="flex min-h-0 flex-1 overflow-auto bg-slate-950 p-3 sm:p-6">
         <div
           className="m-auto"
           style={{ width: canvas.width * scale, height: canvas.height * scale }}

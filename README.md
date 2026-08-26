@@ -29,6 +29,13 @@ itself in your own browser between visits.
 - **Export.** JPEG or PNG at exact pixel size, rendered on a canvas so the download matches the
   preview.
 
+## On phones and tablets
+
+The editor works on any screen. At 1280px and wider the library sits on the left, the banner in
+the middle and the design controls on the right. Below that width the banner gets the full width
+and the panels move to a drawer opened from the tab bar at the bottom — the banner stays visible
+above the drawer while you edit, and drag-and-drop works with a finger.
+
 ## Banner sizes
 
 | Preset | Size |
@@ -39,7 +46,8 @@ itself in your own browser between visits.
 | X / Twitter header | 1500 × 500 |
 | GitHub social preview | 1280 × 640 |
 
-Any custom width and height also works — set it in the **Banner size** panel on the right.
+Any custom width and height also works — set it in the **Banner size** panel (on the right on a
+wide screen, under **Design** on a narrow one).
 
 Turn on **Safe area** in the top bar to see the region LinkedIn keeps visible on every device,
 along with the spot where your profile photo covers the banner.

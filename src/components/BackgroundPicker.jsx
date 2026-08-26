@@ -110,7 +110,7 @@ export default function BackgroundPicker() {
         <div className="py-2 text-center text-xs text-red-400">Error: {error}</div>
       )}
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2">
         {items.map((b) => (
           <button
             key={b.id}

@@ -42,14 +42,14 @@ export default function ExportModal({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-2 sm:p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Download banner"
     >
       <div
-        className="max-h-full w-full max-w-2xl overflow-y-auto rounded-xl border border-slate-700 bg-slate-900 p-5"
+        className="max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
@@ -78,7 +78,7 @@ export default function ExportModal({ onClose }) {
         ))}
         {error && <p className="mb-1 text-xs text-red-400">{error}</p>}
 
-        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <label className="text-xs text-slate-400">
             File name
             <input
@@ -122,15 +122,15 @@ export default function ExportModal({ onClose }) {
           little higher or to the right.
         </p>
 
-        <div className="mt-4 flex justify-end gap-2">
+        <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <button
-            className="rounded border border-slate-700 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-800"
+            className="rounded border border-slate-700 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 sm:py-1.5"
             onClick={onClose}
           >
             Cancel
           </button>
           <button
-            className="rounded bg-cyan-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-cyan-500 disabled:opacity-50"
+            className="rounded bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-500 disabled:opacity-50 sm:py-1.5"
             disabled={busy || !preview}
             onClick={() => download(preview, filename.trim() || 'banner', format)}
           >

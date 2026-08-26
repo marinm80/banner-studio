@@ -6,4 +6,28 @@ html, body, #root {
 
 body {
   overscroll-behavior: none;
+  /* Keep mobile Safari from inflating text when the phone is rotated. */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The visible viewport shrinks and grows as mobile browser chrome slides in
+   and out, so prefer dvh and keep vh as the fallback for older engines. */
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Anything pinned to the bottom edge has to clear the home indicator. */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* iOS zooms the whole page in when a focused control has text under 16px,
+   and never zooms back out. Touch-sized screens get 16px controls instead. */
+@media (max-width: 1279px) {
+  input:not([type='range']):not([type='color']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
 }
