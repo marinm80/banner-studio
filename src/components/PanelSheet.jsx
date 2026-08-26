@@ -1,7 +1,7 @@
 // A panel docked below the canvas on narrow screens. It pushes the canvas up
 // rather than covering it, so the banner stays visible — and shrinks — while a
-// panel is open. The height cap always leaves the canvas enough room to show a
-// banner, even on a landscape phone.
+// panel is open. Its height cap is `.sheet-cap` in index.css, which always
+// leaves room for the canvas and the tab bar, even on a landscape phone.
 
 import { useEffect } from 'react';
 
@@ -15,7 +15,7 @@ export default function PanelSheet({ title, onClose, children, footer }) {
   return (
     <section
       aria-label={title}
-      className="flex max-h-[min(60dvh,calc(100dvh-16rem))] shrink-0 flex-col border-t border-slate-700 bg-slate-900"
+      className="sheet-cap flex shrink-0 flex-col border-t border-slate-700 bg-slate-900"
     >
       <div className="flex shrink-0 items-center justify-between border-b border-slate-800 px-4 py-2">
         <h2 className="text-sm font-semibold">{title}</h2>

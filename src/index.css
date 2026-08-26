@@ -10,11 +10,64 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* The visible viewport shrinks and grows as mobile browser chrome slides in
-   and out, so prefer dvh and keep vh as the fallback for older engines. */
+/* ── Viewport-height caps ────────────────────────────────────────────────────
+   The visible viewport shrinks and grows as mobile browser chrome slides in
+   and out, so these want dvh. But a browser that does not know dvh throws the
+   whole declaration away — and a cap that vanishes is worse than a rough one:
+   an uncapped dialog grows past the screen and gets clipped, and an uncapped
+   drawer pushes the bottom tab bar off screen. Both were reported from a real
+   phone and tablet.
+
+   The fallbacks live in @supports blocks rather than as repeated declarations,
+   because the CSS minifier judges a plain `height: 100vh; height: 100dvh;`
+   pair redundant against its target browsers and drops the vh line — so the
+   fallback never reaches production. @supports survives it.
+
+   -webkit-fill-available is what gives older iOS Safari the *visible* viewport;
+   plain 100vh there is the taller "chrome hidden" height, which is precisely
+   what leaves a screenful of blank space below the app. */
+
 .app-shell {
-  height: 100vh;
   height: 100dvh;
+}
+
+/* Drawer on narrow screens. The 16rem reserve keeps the canvas and the bottom
+   tab bar on screen however tall the drawer's content wants to be. */
+.sheet-cap {
+  max-height: min(60dvh, calc(100dvh - 16rem));
+}
+
+/* Dialogs: never taller than the screen, so their own scrollbar does the
+   moving instead of the page. */
+.modal-cap {
+  max-height: calc(100dvh - 1rem);
+}
+
+@media (min-width: 640px) {
+  .modal-cap {
+    max-height: calc(100dvh - 2rem);
+  }
+}
+
+@supports not (height: 100dvh) {
+  .app-shell {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  .sheet-cap {
+    max-height: min(60vh, calc(100vh - 16rem));
+  }
+
+  .modal-cap {
+    max-height: calc(100vh - 1rem);
+  }
+
+  @media (min-width: 640px) {
+    .modal-cap {
+      max-height: calc(100vh - 2rem);
+    }
+  }
 }
 
 /* Anything pinned to the bottom edge has to clear the home indicator. */

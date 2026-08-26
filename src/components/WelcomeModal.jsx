@@ -12,7 +12,7 @@ export default function WelcomeModal({ onClose, onHelp }) {
       aria-modal="true"
       aria-label="Welcome"
     >
-      <div className="max-h-[calc(100dvh-1rem)] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+      <div className="modal-cap w-full max-w-3xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-6">
         <h2 className="text-lg font-semibold">Welcome — let&apos;s make your LinkedIn banner</h2>
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
           Start with one of these and change whatever you want: the name, the colors, the icons, the

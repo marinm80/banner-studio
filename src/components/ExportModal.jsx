@@ -57,7 +57,7 @@ export default function ExportModal({ onClose }) {
       aria-label="Download banner"
     >
       <div
-        className="max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-5"
+        className="modal-cap w-full max-w-2xl overflow-y-auto overscroll-contain rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
