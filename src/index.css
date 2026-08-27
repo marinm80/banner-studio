@@ -4,6 +4,14 @@ html, body, #root {
   height: 100%;
 }
 
+/* The shell paints itself, but the document underneath was transparent, so any
+   pixel outside the shell rendered as white — which is what the band under the
+   footer actually was. Same colour here means a rubber-band bounce or a
+   rounding gap is invisible instead of glaring. */
+html, body {
+  background-color: var(--color-slate-950);
+}
+
 body {
   overscroll-behavior: none;
   /* Keep mobile Safari from inflating text when the phone is rotated. */
@@ -19,16 +27,22 @@ body {
    phone and tablet.
 
    The fallbacks live in @supports blocks rather than as repeated declarations,
-   because the CSS minifier judges a plain `height: 100vh; height: 100dvh;`
-   pair redundant against its target browsers and drops the vh line — so the
-   fallback never reaches production. @supports survives it.
+   because the CSS minifier judges a plain `max-height: 100vh; max-height:
+   100dvh;` pair redundant against its target browsers and drops the vh line —
+   so the fallback never reaches production. @supports survives it; check the
+   built CSS if you ever change this.
 
-   -webkit-fill-available is what gives older iOS Safari the *visible* viewport;
-   plain 100vh there is the taller "chrome hidden" height, which is precisely
-   what leaves a screenful of blank space below the app. */
+   The shell itself needs none of this: it is pinned with position/inset
+   below, so it takes the viewport rectangle without measuring anything. */
 
+/* Pinned to the viewport rectangle rather than sized with a height. This is
+   what makes the white band impossible: with the shell out of flow the
+   document has nothing to scroll, so there is no strip of bare page to
+   reveal — and unlike `overflow: hidden` on the document, nothing can end up
+   clipped and unreachable either, because the shell simply is the viewport. */
 .app-shell {
-  height: 100dvh;
+  position: fixed;
+  inset: 0;
 }
 
 /* Drawer on narrow screens. The 16rem reserve keeps the canvas and the bottom
@@ -50,11 +64,6 @@ body {
 }
 
 @supports not (height: 100dvh) {
-  .app-shell {
-    height: 100vh;
-    height: -webkit-fill-available;
-  }
-
   .sheet-cap {
     max-height: min(60vh, calc(100vh - 16rem));
   }
