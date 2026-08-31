@@ -51,6 +51,20 @@ export function textBlockMetrics(ctx, layer) {
 
 // Geometry of a terminal layer, shared by the DOM preview and the canvas export
 // so what you drag around is exactly what gets rendered.
+// Rendered width of every text layer, keyed by id. Measured with the same
+// textBlockMetrics the export uses — and after the fonts have actually loaded,
+// because measuring against a fallback face would align the text to widths the
+// downloaded image does not have.
+export async function measureTextWidths(layers) {
+  const texts = layers.filter((l) => l.type === 'text');
+  if (!texts.length) return {};
+  await waitForLayerFonts(texts);
+  const ctx = document.createElement('canvas').getContext('2d');
+  const widths = {};
+  for (const layer of texts) widths[layer.id] = textBlockMetrics(ctx, layer).width;
+  return widths;
+}
+
 export function terminalMetrics(layer) {
   const lines = String(layer.lines ?? '').split('\n');
   const titleBarH = layer.titleBar ? 44 : 0;

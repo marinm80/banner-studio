@@ -21,6 +21,13 @@ export const CANVAS_PRESETS = [
 
 export const DEFAULT_CANVAS = { width: 1584, height: 396, fill: '#0f172a' };
 
+// The region LinkedIn keeps visible on every device, as a fraction of the
+// canvas. CanvasEditor draws it as the dashed "safe area" and alignTextLayers
+// uses the horizontal one as its margin, so aligned text lands exactly on that
+// boundary instead of somewhere arbitrary.
+export const SAFE_AREA_X_RATIO = 0.06;
+export const SAFE_AREA_Y_RATIO = 0.12;
+
 const baseText = {
   type: 'text',
   font: 'Inter',
@@ -300,6 +307,28 @@ const editorSlice = createSlice({
       record(state);
       [state.layers[i], state.layers[j]] = [state.layers[j], state.layers[i]];
     },
+    // Moves every text layer to a shared edge so they line up as a block:
+    // the same left edge, the same centre, or the same right edge. Widths have
+    // to be measured against real font metrics, which a reducer cannot do, so
+    // the caller passes them in (see measureTextWidths in utils/canvasUtils).
+    // One record() call means the whole banner realigns in a single undo step.
+    alignTextLayers(state, action) {
+      const { align, widths } = action.payload;
+      const texts = state.layers.filter((l) => l.type === 'text');
+      if (!texts.length) return;
+      record(state);
+      const margin = Math.round(state.canvas.width * SAFE_AREA_X_RATIO);
+      for (const layer of texts) {
+        const w = widths[layer.id] ?? 0;
+        if (align === 'left') layer.x = margin;
+        else if (align === 'center') layer.x = Math.round((state.canvas.width - w) / 2);
+        else layer.x = Math.round(state.canvas.width - margin - w);
+        // A block moved to one side wants its own lines on that side too,
+        // otherwise multi-line text stays ragged against the new edge.
+        layer.align = align;
+      }
+      state.coalesceKey = null;
+    },
     selectLayer(state, action) {
       state.selectedId = action.payload;
       state.coalesceKey = null;
@@ -356,6 +385,7 @@ const editorSlice = createSlice({
 });
 
 export const {
+  alignTextLayers,
   setCanvasSize,
   setCanvasFill,
   setBackground,

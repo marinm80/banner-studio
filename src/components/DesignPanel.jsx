@@ -4,6 +4,7 @@
 // footer to put it in.
 
 import CanvasSettings from './CanvasSettings';
+import TextAlignControls from './TextAlignControls';
 import LayerList from './LayerList';
 import PropertiesPanel from './PropertiesPanel';
 import ContactCard from './ContactCard';
@@ -12,6 +13,7 @@ export default function DesignPanel() {
   return (
     <>
       <CanvasSettings />
+      <TextAlignControls />
       <LayerList />
       <PropertiesPanel />
       <div className="p-4 pt-0">

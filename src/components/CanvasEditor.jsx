@@ -9,7 +9,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLayer, updateLayer, removeLayer } from '../features/editor/editorSlice';
+import {
+  selectLayer,
+  updateLayer,
+  removeLayer,
+  SAFE_AREA_X_RATIO,
+  SAFE_AREA_Y_RATIO,
+} from '../features/editor/editorSlice';
 import TextLayer from './TextLayer';
 import ImageLayer from './ImageLayer';
 import IconLayer from './IconLayer';
@@ -212,17 +218,17 @@ export default function CanvasEditor() {
                 <div
                   className="absolute border border-dashed border-amber-400/60"
                   style={{
-                    left: canvas.width * 0.06,
-                    right: canvas.width * 0.06,
-                    top: canvas.height * 0.12,
-                    bottom: canvas.height * 0.12,
+                    left: canvas.width * SAFE_AREA_X_RATIO,
+                    right: canvas.width * SAFE_AREA_X_RATIO,
+                    top: canvas.height * SAFE_AREA_Y_RATIO,
+                    bottom: canvas.height * SAFE_AREA_Y_RATIO,
                   }}
                 />
                 {/* LinkedIn overlays the profile photo here on desktop. */}
                 <div
                   className="absolute rounded-full border-2 border-dashed border-amber-400/70"
                   style={{
-                    left: canvas.width * 0.03,
+                    left: canvas.width * (SAFE_AREA_X_RATIO / 2),
                     bottom: -canvas.height * 0.18,
                     width: canvas.height * 0.52,
                     height: canvas.height * 0.52,
@@ -230,7 +236,10 @@ export default function CanvasEditor() {
                 />
                 <span
                   className="absolute rounded bg-amber-400/90 px-2 py-0.5 text-[11px] font-semibold text-amber-950"
-                  style={{ left: canvas.width * 0.06 + 8, top: canvas.height * 0.12 + 8 }}
+                  style={{
+                    left: canvas.width * SAFE_AREA_X_RATIO + 8,
+                    top: canvas.height * SAFE_AREA_Y_RATIO + 8,
+                  }}
                 >
                   Keep important text inside this area
                 </span>
