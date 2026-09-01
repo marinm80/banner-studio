@@ -22,8 +22,15 @@ itself in your own browser between visits.
   Support Services, Database Application Development — plus general-purpose designs for anyone.
 - **Change absolutely everything.** Text, fonts, sizes, colors, shadows, position, rotation,
   opacity, layer order, banner dimensions and background are all editable.
-- **Add technology icons.** Around 90 built in — JavaScript, Python, Linux, Git, Docker, AWS,
-  Cisco, MySQL, and many more — searchable by name or keyword.
+- **Add technology icons.** Over 140 built in — JavaScript, Python, Linux, Git, Docker, AWS,
+  Cisco, Packet Tracer, MySQL and many more — grouped into twelve categories and searchable by
+  name or keyword, in English or Spanish. Contact icons too (LinkedIn, email, phone, location,
+  WhatsApp), so the banner can point somewhere.
+- **Swap any icon in place.** Select one already on the banner and the next icon you click
+  replaces it, keeping its position, size and backdrop — which is how the network templates let
+  you change each node for your own stack.
+- **Align all the text at once.** Left, centre or right, lining every text layer up on the same
+  edge just inside the safe area, in a single undoable step.
 - **Add your own icons.** Upload an SVG/PNG/JPG or paste SVG code; your icons are saved in your
   browser and show up in the picker alongside the built-in ones.
 - **Use real photographs.** A curated set of free Unsplash photos — networking, cloud, code and

@@ -4,16 +4,34 @@
 import ContactCard from './ContactCard';
 
 const STEPS = [
-  ['Pick a template', 'The Templates tab on the left has one for each ATC discipline. Click it and the banner is already half done.'],
-  ['Put your name in', 'Click the text on the banner, then edit it in the panel on the right. Change the font, size and color there too.'],
-  ['Add your icons', 'Open the Icons tab, search for what you use — python, docker, cisco, sql — and click it. Drag it wherever you like.'],
-  ['Check the safe area', 'Turn on “Safe area” in the top bar. Keep your name inside the dashed box and away from the circle where LinkedIn puts your photo.'],
+  [
+    'Pick a template',
+    'The Templates tab has one for each IT discipline plus general-purpose ones. Click it and the banner is already half done. The network ones arrive with a filled-in topology.',
+  ],
+  [
+    'Put your name in',
+    'Click the text on the banner, then edit it in the panel on the right. Change the font, size and color there too. “Align all text” lines every text layer up on one edge in a single click.',
+  ],
+  [
+    'Add or swap your icons',
+    'Open the Icons tab and click what you use — python, docker, cisco, sql — to drop it on the banner. Select an icon already on the banner first and the next one you click replaces it in place, which is how you change a node on the network templates.',
+  ],
+  [
+    'Say how to reach you',
+    'The Contact & profile group has LinkedIn, email, phone, location and WhatsApp, so the banner can point somewhere instead of only looking good.',
+  ],
+  [
+    'Check the safe area',
+    'Turn on “Safe area” in the top bar. Keep your name inside the dashed box and away from the circle where LinkedIn puts your photo.',
+  ],
   ['Download it', 'Hit Download, choose JPEG or PNG, and upload the file to LinkedIn.'],
 ];
 
 const TIPS = [
-  'Nothing is permanent — Undo and Redo are in the top bar, and “Start over” gives you a clean canvas.',
+  'Nothing is permanent — Undo and Redo are in the top bar, and “Start over” gives you a clean canvas. Aligning all the text is a single undo step, so it costs nothing to try.',
   'If text is hard to read over a busy background, turn on “Highlight box” or “Text shadow” for that layer.',
+  'The icon library is grouped — Networking, Cloud, Databases, Contact and so on — and the search box matches names and keywords, in English or Spanish.',
+  'Missing an icon? “Add your own icon” at the bottom of the Icons tab takes an SVG, PNG or JPG, and yours then behave like any other, swap included.',
   'Arrow keys nudge the selected layer one pixel; hold Shift to move ten at a time. Delete removes it.',
   'Your work saves itself in this browser. Nothing is uploaded anywhere and there is no account to create.',
   'No idea what to write? “Information Technology Student · Open to opportunities” is a perfectly good headline.',
@@ -36,7 +54,7 @@ export default function HelpModal({ onClose }) {
           <div>
             <h2 className="text-lg font-semibold">How to use Banner Studio</h2>
             <p className="mt-1 text-xs text-slate-400">
-              Five steps. No design experience needed.
+              Six steps. No design experience needed.
             </p>
           </div>
           <button className="text-slate-400 hover:text-white" onClick={onClose} aria-label="Close">
