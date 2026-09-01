@@ -40,6 +40,19 @@ export function drawCover(ctx, img, w, h) {
   ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
 }
 
+// The same crop expressed as numbers, for turning a point in a background's own
+// coordinate space into a point on the banner — which is what a template needs
+// to drop an icon onto a background's socket. Deliberately derived from the
+// identical maths as drawCover: if one changes, change both.
+export function coverTransform(bgW, bgH, canvasW, canvasH) {
+  const scale = Math.max(canvasW / bgW, canvasH / bgH);
+  return {
+    scale,
+    offsetX: (canvasW - bgW * scale) / 2,
+    offsetY: (canvasH - bgH * scale) / 2,
+  };
+}
+
 export function textBlockMetrics(ctx, layer) {
   ctx.font = `${layer.weight} ${layer.size}px "${layer.font}"`;
   const lines = String(layer.text ?? '').split('\n');

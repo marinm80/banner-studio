@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICONS, ICON_CATEGORIES, iconDataUri, searchIcons } from '../data/icons';
 import { addCustom, removeCustom } from '../features/icons/iconsSlice';
-import { addIcon, addCustomIcon } from '../features/editor/editorSlice';
+import { addIcon, addCustomIcon, replaceIcon } from '../features/editor/editorSlice';
 
 const inputCls =
   'w-full rounded border border-slate-700 bg-slate-800 px-2 py-1 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-500 focus:outline-none';
@@ -29,6 +29,10 @@ export default function IconPicker() {
   const dispatch = useDispatch();
   const custom = useSelector((s) => s.icons.custom);
   const placedIcons = useSelector((s) => s.editor.layers.filter((l) => l.type === 'icon').length);
+  // With an icon layer selected, the picker swaps that layer rather than adding
+  // another — which is how a template's node gets changed for your own tool.
+  const selected = useSelector((s) => s.editor.layers.find((l) => l.id === s.editor.selectedId));
+  const swapping = selected?.type === 'icon' ? selected : null;
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [adding, setAdding] = useState(false);
@@ -46,6 +50,10 @@ export default function IconPicker() {
   );
 
   const place = (icon) => {
+    if (swapping) {
+      dispatch(replaceIcon({ id: swapping.id, icon }));
+      return;
+    }
     // Lay new icons out in a row so several clicks in a row stay visible
     // instead of piling up on the same spot.
     const spot = { x: 120 + (placedIcons % 8) * 96, y: 250 + Math.floor(placedIcons / 8) * 96 };
@@ -83,9 +91,17 @@ export default function IconPicker() {
   return (
     <div className="p-4">
       <h2 className="text-sm font-semibold">Icons</h2>
-      <p className="mb-3 mt-1 text-[11px] text-slate-400">
-        Click any icon to drop it on the banner, then drag it where you want.
-      </p>
+      {swapping ? (
+        <p className="mb-3 mt-1 rounded border border-cyan-800 bg-cyan-950/50 px-2 py-1.5 text-[11px] leading-relaxed text-cyan-200">
+          Replacing <strong className="font-semibold">{swapping.name}</strong> — click any icon and
+          it takes its place, same spot and size. Click the banner background to stop.
+        </p>
+      ) : (
+        <p className="mb-3 mt-1 text-[11px] text-slate-400">
+          Click any icon to drop it on the banner, then drag it where you want. Select an icon
+          already on the banner first to swap that one instead.
+        </p>
+      )}
 
       <input
         className={`${inputCls} mb-2`}
