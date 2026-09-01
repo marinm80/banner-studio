@@ -48,9 +48,10 @@ export default function ContactCard({ compact = false }) {
     <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-4">
       <h3 className="text-sm font-semibold text-slate-100">Questions, ideas or bugs?</h3>
       <p className="mt-1 text-xs leading-relaxed text-slate-400">
-        This tool was built to help ATC students put together a decent LinkedIn banner without
-        needing design software. If something is broken, confusing, or you want another icon or
-        template added, write to:
+        A free banner editor for anyone — no account, no design software. It started out helping
+        ATC students, and the templates and icons still lean that way, but it works just as well
+        for any profile. If something is broken, confusing, or you want another icon or template
+        added, write to:
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <code className="rounded bg-slate-900 px-3 py-1.5 text-sm text-cyan-300">

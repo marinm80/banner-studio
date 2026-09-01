@@ -4,9 +4,12 @@
 Mirror: <https://marinm80.github.io/banner-studio/>
 More of my projects: <https://rafaelmarin.dev>
 
-A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
-starting out in Information Technology and want a decent-looking cover image without learning
-Photoshop, creating an account, or paying for anything.
+A free, browser-based editor for LinkedIn profile banners — for anyone who wants a decent-looking
+cover image without learning Photoshop, creating an account, or paying for anything.
+
+It started out helping ATC students who are beginning in Information Technology, and the ATC
+templates and the technology icon library still reflect that, but nothing in it is specific to a
+course: the templates, colours, icons and background are all yours to change.
 
 Everything runs in the browser. Nothing is uploaded, no account is needed, and your work saves
 itself in your own browser between visits.
@@ -19,8 +22,15 @@ itself in your own browser between visits.
   Support Services, Database Application Development — plus general-purpose designs for anyone.
 - **Change absolutely everything.** Text, fonts, sizes, colors, shadows, position, rotation,
   opacity, layer order, banner dimensions and background are all editable.
-- **Add technology icons.** Around 90 built in — JavaScript, Python, Linux, Git, Docker, AWS,
-  Cisco, MySQL, and many more — searchable by name or keyword.
+- **Add technology icons.** Over 140 built in — JavaScript, Python, Linux, Git, Docker, AWS,
+  Cisco, Packet Tracer, MySQL and many more — grouped into twelve categories and searchable by
+  name or keyword, in English or Spanish. Contact icons too (LinkedIn, email, phone, location,
+  WhatsApp), so the banner can point somewhere.
+- **Swap any icon in place.** Select one already on the banner and the next icon you click
+  replaces it, keeping its position, size and backdrop — which is how the network templates let
+  you change each node for your own stack.
+- **Align all the text at once.** Left, centre or right, lining every text layer up on the same
+  edge just inside the safe area, in a single undoable step.
 - **Add your own icons.** Upload an SVG/PNG/JPG or paste SVG code; your icons are saved in your
   browser and show up in the picker alongside the built-in ones.
 - **Use real photographs.** A curated set of free Unsplash photos — networking, cloud, code and

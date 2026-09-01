@@ -11,6 +11,21 @@
 const W = 1500;
 const H = 500;
 
+/* What actually survives on the banner.
+
+   A banner paints this 1500x500 space with object-fit: cover, so it does not
+   all show. On the default 1584x396 cover only y=[62,438] is visible; the rest
+   is thrown away. Texture — dots, grids, waves, falling code — may bleed off
+   the edge happily, that is what makes it read as texture. But anything that
+   reads as an *object* (a device, a browser frame, a cloud, a socket) has to
+   sit inside this band or it renders sliced in half against the banner edge.
+
+   This was reported from the deployed app: four of the eight devices on the
+   Network Support background were cut. Keep new objects within these bounds
+   and check with the extents, not by eye. */
+const OBJ_TOP = 70;
+const OBJ_BOTTOM = 430;
+
 // Seeded PRNG (mulberry32) so the catalog is stable across sessions.
 function rng(seed) {
   let t = seed >>> 0;
@@ -272,7 +287,7 @@ function webDevelopment(p, r) {
   // the left, always sit on quiet background.
   const frames = [
     [640, 90, 380, 250],
-    [1060, 60, 380, 130],
+    [1060, 78, 380, 130],
     [1060, 220, 380, 150],
   ];
   frames.forEach(([x, y, w, h], i) => {
@@ -289,7 +304,7 @@ function webDevelopment(p, r) {
   });
   const tags = ['&lt;/&gt;', '&lt;div&gt;', '&lt;h1&gt;', '{ }', '&lt;a&gt;', '&lt;/body&gt;'];
   tags.forEach((t, i) => {
-    el += `<text x="${(520 + r() * (W - 680)) | 0}" y="${(90 + r() * (H - 180)) | 0}" font-family="monospace" font-size="${(26 + r() * 22) | 0}" fill="${i % 2 ? p.accent2 : p.accent}" fill-opacity="${(0.12 + r() * 0.16).toFixed(2)}">${t}</text>`;
+    el += `<text x="${(520 + r() * (W - 680)) | 0}" y="${(OBJ_TOP + 55 + r() * (OBJ_BOTTOM - OBJ_TOP - 60)) | 0}" font-family="monospace" font-size="${(26 + r() * 22) | 0}" fill="${i % 2 ? p.accent2 : p.accent}" fill-opacity="${(0.12 + r() * 0.16).toFixed(2)}">${t}</text>`;
   });
   return el;
 }
@@ -301,7 +316,14 @@ function cloudComputing(p, r) {
     `<path d="M-70 30a34 34 0 015-67 46 46 0 0187-12 32 32 0 0110 79z" fill="${p.accent}" fill-opacity="${op}" stroke="${p.accent2}" stroke-opacity="${(op * 2.2).toFixed(2)}" stroke-width="2"/>` +
     `</g>`;
   // Clouds and racks live in the right two thirds so the text side stays clean.
-  let el = cloud(940, 140, 1.5, 0.1) + cloud(1340, 210, 1.05, 0.09) + cloud(690, 90, 0.75, 0.12);
+  // The path's top arc bulges to y=-75 around the origin — far higher than the
+  // -70 start point suggests, which is how the big cloud kept getting its top
+  // shaved off. Derive the centre from that rather than guessing it.
+  const cloudY = (scale, want) => Math.max(want, OBJ_TOP + 75 * scale);
+  let el =
+    cloud(940, cloudY(1.5, 168), 1.5, 0.1) +
+    cloud(1340, cloudY(1.05, 210), 1.05, 0.09) +
+    cloud(690, cloudY(0.75, 124), 0.75, 0.12);
   const nodes = [
     [660, 380],
     [860, 400],
@@ -334,15 +356,16 @@ function networkSupport(p, r) {
 
   // The topology sits in the right two thirds so the name stays legible.
   const hub = [1000, 250];
+  // Each device is 32 tall, so its centre needs OBJ_TOP + 16 of clearance.
   const spokes = [
-    [640, 110],
-    [620, 400],
-    [860, 60],
-    [880, 430],
-    [1180, 70],
-    [1200, 430],
-    [1420, 160],
-    [1400, 380],
+    [640, 112],
+    [620, 388],
+    [880, 100],
+    [900, 400],
+    [1180, 100],
+    [1200, 400],
+    [1420, 152],
+    [1400, 366],
   ];
   let el = '';
   spokes.forEach(([x, y]) => {
@@ -391,7 +414,7 @@ function databaseDev(p, r) {
   el += `<path d="M932 330 L1010 310" stroke="${p.accent2}" stroke-opacity="0.5" stroke-width="2.5" stroke-dasharray="7 5"/>`;
 
   ['SELECT *', 'JOIN', 'WHERE', 'INSERT INTO', 'PRIMARY KEY', 'GROUP BY'].forEach((t, i) => {
-    el += `<text x="${(600 + r() * (W - 780)) | 0}" y="${(100 + r() * (H - 200)) | 0}" font-family="monospace" font-size="${(22 + r() * 18) | 0}" fill="${i % 2 ? p.accent2 : p.accent}" fill-opacity="${(0.1 + r() * 0.16).toFixed(2)}">${t}</text>`;
+    el += `<text x="${(600 + r() * (W - 780)) | 0}" y="${(OBJ_TOP + 48 + r() * (OBJ_BOTTOM - OBJ_TOP - 55)) | 0}" font-family="monospace" font-size="${(22 + r() * 18) | 0}" fill="${i % 2 ? p.accent2 : p.accent}" fill-opacity="${(0.1 + r() * 0.16).toFixed(2)}">${t}</text>`;
   });
   return el;
 }
@@ -518,6 +541,8 @@ const link = (p, [x1, y1], [x2, y2]) => {
    free is a composition choice, because that is where the name goes. */
 const BAND_TOP = 140;
 const BAND_BOTTOM = 360;
+// Tighter than OBJ_TOP/OBJ_BOTTOM on purpose: a socket carries a 17px halo on
+// top of its 46 radius, and a ring of them reads better away from the edge.
 const BAND_MID = (BAND_TOP + BAND_BOTTOM) / 2;
 
 const TOPOLOGIES = {
