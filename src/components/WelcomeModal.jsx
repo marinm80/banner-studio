@@ -17,7 +17,7 @@ export default function WelcomeModal({ onClose, onHelp }) {
         <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
           Start with one of these and change whatever you want: the name, the colors, the icons, the
           background. If you have never designed anything before, that is completely fine — pick the
-          one that matches what you study and edit the text.
+          one closest to what you do and edit the text.
         </p>
 
         <div className="mt-5">

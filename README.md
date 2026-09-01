@@ -4,9 +4,12 @@
 Mirror: <https://marinm80.github.io/banner-studio/>
 More of my projects: <https://rafaelmarin.dev>
 
-A free, browser-based editor for LinkedIn profile banners. Built for ATC students who are
-starting out in Information Technology and want a decent-looking cover image without learning
-Photoshop, creating an account, or paying for anything.
+A free, browser-based editor for LinkedIn profile banners — for anyone who wants a decent-looking
+cover image without learning Photoshop, creating an account, or paying for anything.
+
+It started out helping ATC students who are beginning in Information Technology, and the ATC
+templates and the technology icon library still reflect that, but nothing in it is specific to a
+course: the templates, colours, icons and background are all yours to change.
 
 Everything runs in the browser. Nothing is uploaded, no account is needed, and your work saves
 itself in your own browser between visits.
