@@ -477,6 +477,104 @@ function mesh(p, r) {
 
 /* ── Catalog ────────────────────────────────────────────────────────────── */
 
+/* ── Node-forward topologies ──────────────────────────────────────────────────
+   The patterns above are decoration. These exist to be filled in: the network
+   is the subject, and every node is an empty socket sized to hold an icon.
+   Each one reports where its sockets are, in this 1500x500 space, so a template
+   can drop real icon layers onto them — which is what lets someone swap any
+   node for their own technology. Returning an object instead of a string is
+   what marks a generator as node-bearing; buildCatalog carries the positions
+   through to the catalog entry. */
+
+const SOCKET_R = 46; // leaves room for a ~66px icon once the banner crops it
+
+const socket = (p, x, y, r = SOCKET_R) =>
+  `<circle cx="${x}" cy="${y}" r="${r + 17}" fill="${p.accent}" fill-opacity="0.07"/>` +
+  `<circle cx="${x}" cy="${y}" r="${r}" fill="${p.bg0}" fill-opacity="0.62" ` +
+  `stroke="${p.accent2}" stroke-opacity="0.55" stroke-width="2.5"/>`;
+
+// Stops short of both sockets so the line never runs under an icon.
+const link = (p, [x1, y1], [x2, y2]) => {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const d = Math.hypot(dx, dy) || 1;
+  const gap = SOCKET_R + 6;
+  return (
+    `<line x1="${(x1 + (dx / d) * gap) | 0}" y1="${(y1 + (dy / d) * gap) | 0}" ` +
+    `x2="${(x2 - (dx / d) * gap) | 0}" y2="${(y2 - (dy / d) * gap) | 0}" ` +
+    `stroke="${p.accent}" stroke-opacity="0.34" stroke-width="2.5" stroke-dasharray="10 8"/>`
+  );
+};
+
+/* Where a socket may sit.
+
+   The banner paints this 1500x500 space with object-fit: cover, so it does not
+   all survive. On the default 1584x396 banner only y=[62,438] is visible, and a
+   socket needs its radius plus its halo (46 + 17) of clearance or it renders
+   sliced by the edge. The first version of these layouts ignored that and put
+   four of seven nodes in the cropped band, which looked broken.
+
+   X is safe across the whole width at the default size; keeping the left third
+   free is a composition choice, because that is where the name goes. */
+const BAND_TOP = 140;
+const BAND_BOTTOM = 360;
+const BAND_MID = (BAND_TOP + BAND_BOTTOM) / 2;
+
+const TOPOLOGIES = {
+  // One centre with everything reporting to it.
+  hub() {
+    const centre = [1010, BAND_MID];
+    // A hexagonal ring, flattened to fit the band.
+    const ring = [0, 60, 120, 180, 240, 300].map((deg) => {
+      const a = (deg * Math.PI) / 180;
+      return [
+        Math.round(centre[0] + 300 * Math.cos(a)),
+        Math.round(centre[1] + (BAND_BOTTOM - BAND_MID) * Math.sin(a)),
+      ];
+    });
+    return { nodes: [centre, ...ring], links: ring.map((pt) => [centre, pt]) };
+  },
+  // A loose constellation, each node wired to its neighbours.
+  mesh() {
+    const nodes = [
+      [650, 200],
+      [850, 330],
+      [1020, 165],
+      [1180, 335],
+      [1300, 190],
+      [1420, 320],
+    ];
+    const links = [
+      [nodes[0], nodes[1]],
+      [nodes[0], nodes[2]],
+      [nodes[1], nodes[2]],
+      [nodes[1], nodes[3]],
+      [nodes[2], nodes[4]],
+      [nodes[3], nodes[4]],
+      [nodes[3], nodes[5]],
+      [nodes[4], nodes[5]],
+    ];
+    return { nodes, links };
+  },
+  // A straight pipeline, for a stack that runs in order.
+  row() {
+    const nodes = [650, 804, 958, 1112, 1266, 1420].map((x) => [x, BAND_MID]);
+    return { nodes, links: nodes.slice(1).map((n, i) => [nodes[i], n]) };
+  },
+};
+
+const topology = (kind) => (p, r) => {
+  const { nodes, links } = TOPOLOGIES[kind]();
+  let body = '';
+  for (let i = 0; i < 70; i++) {
+    body += `<circle cx="${(r() * W) | 0}" cy="${(r() * H) | 0}" r="1.6" fill="${p.accent}" fill-opacity="${(0.08 + r() * 0.22).toFixed(2)}"/>`;
+  }
+  // Links first so the sockets always sit on top of them.
+  for (const [a, b] of links) body += link(p, a, b);
+  for (const [x, y] of nodes) body += socket(p, x, y);
+  return { body, nodes: nodes.map(([x, y]) => ({ x, y, r: SOCKET_R })) };
+};
+
 const GENERATORS = [
   // technology
   { key: 'circuits', label: 'Circuits', theme: 'technology', tags: ['circuits', 'hardware', 'futuristic'], pals: ['blue', 'cyan', 'violet'], draw: circuits },
@@ -495,6 +593,10 @@ const GENERATORS = [
   { key: 'atccloud', label: 'ATC · Cloud Computing', theme: 'technology', tags: ['atc', 'cloud computing', 'aws', 'azure', 'devops', 'servers'], pals: ['cyan', 'blue', 'violet'], draw: cloudComputing },
   { key: 'atcnet', label: 'ATC · Network Support Services', theme: 'technology', tags: ['atc', 'network support services', 'networking', 'cisco', 'support', 'infrastructure'], pals: ['green', 'blue', 'graphite'], draw: networkSupport },
   { key: 'atcdb', label: 'ATC · Database Application Development', theme: 'technology', tags: ['atc', 'database application development', 'database', 'sql', 'data'], pals: ['violet', 'blue', 'amber'], draw: databaseDev },
+  // Node-forward: the network is the subject and each node takes an icon.
+  { key: 'topohub', label: 'Topology · hub', theme: 'technology', tags: ['topology', 'network', 'nodes', 'icons', 'hub', 'infrastructure', 'cisco'], pals: ['green', 'blue', 'cyan'], draw: topology('hub') },
+  { key: 'topomesh', label: 'Topology · mesh', theme: 'technology', tags: ['topology', 'network', 'nodes', 'icons', 'mesh', 'stack'], pals: ['cyan', 'violet', 'blue'], draw: topology('mesh') },
+  { key: 'topopipe', label: 'Topology · pipeline', theme: 'technology', tags: ['topology', 'network', 'nodes', 'icons', 'pipeline', 'devops', 'cloud'], pals: ['cyan', 'blue', 'violet'], draw: topology('row') },
   // general purpose
   { key: 'poly', label: 'Polygons', theme: 'general', tags: ['polygons', 'triangles', 'corporate', 'light'], pals: ['light', 'corporate', 'pastel'], draw: poly },
   { key: 'flat', label: 'Minimal shapes', theme: 'general', tags: ['minimal', 'flat', 'shapes', 'corporate', 'light'], pals: ['light', 'pastel', 'mint'], draw: flat },
@@ -566,7 +668,9 @@ function buildCatalog() {
     g.pals.forEach((palId, k) => {
       const p = PALETTES[palId];
       const r = rng(gi * 97 + k * 13 + 1);
-      const svg = wrap(p, g.draw(p, r));
+      // A node-bearing generator returns { body, nodes } instead of markup.
+      const out = g.draw(p, r);
+      const svg = wrap(p, typeof out === 'string' ? out : out.body);
       const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
       CATALOG.push({
         id: `bg_${g.key}_${p.id}`,
@@ -576,6 +680,9 @@ function buildCatalog() {
         label: `${g.label} · ${p.id}`,
         tags: g.tags,
         license: 'generated',
+        // Sockets live in the generator's own space, so ship that space with
+        // them — the banner crops it and the coordinates have to be translated.
+        ...(typeof out === 'string' ? {} : { nodes: out.nodes, space: { w: W, h: H } }),
       });
     });
   });

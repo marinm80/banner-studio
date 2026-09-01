@@ -4,6 +4,7 @@
 
 import { getBackgroundById } from '../features/backgrounds/backgroundsAPI';
 import { makeText, makeIcon, makeTerminal } from '../features/editor/editorSlice';
+import { coverTransform } from '../utils/canvasUtils';
 
 export const TEMPLATE_GROUPS = ['ATC · Information Technology', 'General'];
 
@@ -20,6 +21,20 @@ const iconRow = (ids, { x = 84, y = 286, size = 66, gap = 84, tint, badge = 'non
       ...(tint ? { tint } : {}),
     })
   );
+
+// One icon per socket, centred on it. The icon is deliberately smaller than the
+// socket plate so the ring still reads as a socket around it. Fewer ids than
+// sockets simply repeats them.
+const nodeIcons = (sockets, ids) =>
+  sockets.map((s, i) => {
+    const size = Math.max(24, Math.round(s.size * 0.62));
+    return makeIcon(ids[i % ids.length], {
+      name: `Node ${i + 1}`,
+      x: Math.round(s.x - size / 2),
+      y: Math.round(s.y - size / 2),
+      size,
+    });
+  });
 
 // A dark shadow lifts text off a dark background, but on light backgrounds it
 // just muddies the letters — hence the flag.
@@ -62,6 +77,42 @@ const tagline = (text, color, shadow = true) =>
   });
 
 export const TEMPLATES = [
+  {
+    id: 'topology-network',
+    name: 'Network topology',
+    group: 'ATC · Information Technology',
+    description: 'Hub and spokes. Every node is an icon you can swap.',
+    backgroundId: 'bg_topohub_green',
+    build: (sockets) => [
+      heading('Your Name'),
+      headline('Network Support Services Student · ATC', '#6ee7b7'),
+      ...nodeIcons(sockets, ['cisco', 'router', 'switch', 'firewall', 'wifi', 'server', 'ethernet']),
+    ],
+  },
+  {
+    id: 'topology-stack',
+    name: 'My stack, connected',
+    group: 'ATC · Information Technology',
+    description: 'A mesh of the tools you use. Change any node for your own.',
+    backgroundId: 'bg_topomesh_cyan',
+    build: (sockets) => [
+      heading('Your Name'),
+      headline('Information Technology Student · ATC', '#67e8f9'),
+      ...nodeIcons(sockets, ['python', 'javascript', 'react', 'nodejs', 'mysql', 'git']),
+    ],
+  },
+  {
+    id: 'topology-pipeline',
+    name: 'Cloud pipeline',
+    group: 'ATC · Information Technology',
+    description: 'Your toolchain in order, one icon per step.',
+    backgroundId: 'bg_topopipe_cyan',
+    build: (sockets) => [
+      heading('Your Name'),
+      headline('Cloud Computing Student · ATC', '#67e8f9'),
+      ...nodeIcons(sockets, ['git', 'github', 'docker', 'kubernetes', 'terraform', 'aws']),
+    ],
+  },
   /* ── ATC · Information Technology ─────────────────────────────────────── */
   {
     id: 'atc-web-development',
@@ -239,12 +290,32 @@ export const TEMPLATES = [
   },
 ];
 
+// Sockets are described in the background's own coordinate space, and the banner
+// paints that background with object-fit: cover — so the positions have to be
+// put through the same crop before anything can be placed on them.
+function socketsOnCanvas(bg, canvas) {
+  if (!bg?.nodes?.length || !bg.space) return [];
+  const { scale, offsetX, offsetY } = coverTransform(
+    bg.space.w,
+    bg.space.h,
+    canvas.width,
+    canvas.height
+  );
+  return bg.nodes.map((n) => ({
+    x: offsetX + n.x * scale,
+    y: offsetY + n.y * scale,
+    size: n.r * 2 * scale,
+  }));
+}
+
 export function buildTemplate(template) {
   const bg = getBackgroundById(template.backgroundId);
+  const canvas = { ...CANVAS };
+  // Templates without sockets ignore the argument.
   return {
-    canvas: { ...CANVAS },
+    canvas,
     background: bg ? { source: 'api', id: bg.id, url: bg.url } : null,
-    layers: template.build(),
+    layers: template.build(socketsOnCanvas(bg, canvas)),
   };
 }
 

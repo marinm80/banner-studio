@@ -281,6 +281,24 @@ const editorSlice = createSlice({
       if (shadow) layer.shadow = { ...layer.shadow, ...shadow };
       if (box) layer.box = { ...layer.box, ...box };
     },
+    // Swaps the artwork on an existing icon layer while keeping where it sits
+    // and how it is styled. This is what makes a topology node feel like a
+    // socket: select the node, pick another icon, and it changes in place
+    // instead of landing somewhere else as a new layer.
+    replaceIcon(state, action) {
+      const { id, icon } = action.payload;
+      const layer = state.layers.find((l) => l.id === id && l.type === 'icon');
+      if (!layer) return;
+      record(state);
+      layer.iconId = icon.id;
+      layer.svg = icon.svg || '';
+      layer.src = icon.src || null;
+      layer.mono = !!icon.mono;
+      // Only a single-colour icon can carry a tint; a brand icon keeps its own.
+      layer.tint = icon.mono ? layer.tint || '#e2e8f0' : null;
+      layer.name = icon.name || layer.name;
+      state.coalesceKey = null;
+    },
     removeLayer(state, action) {
       record(state);
       state.layers = state.layers.filter((l) => l.id !== action.payload);
@@ -386,6 +404,7 @@ const editorSlice = createSlice({
 
 export const {
   alignTextLayers,
+  replaceIcon,
   setCanvasSize,
   setCanvasFill,
   setBackground,
