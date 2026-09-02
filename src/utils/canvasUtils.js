@@ -7,7 +7,7 @@
 // they share (LINE_HEIGHT, terminalMetrics) are exported from here and
 // imported by the DOM components precisely so they cannot drift apart.
 
-import { waitForLayerFonts } from './fonts';
+import { waitForLayerFonts, fontSpec } from './fonts';
 import { iconDataUri } from '../data/icons';
 
 export const LINE_HEIGHT = 1.2;
@@ -54,7 +54,7 @@ export function coverTransform(bgW, bgH, canvasW, canvasH) {
 }
 
 export function textBlockMetrics(ctx, layer) {
-  ctx.font = `${layer.weight} ${layer.size}px "${layer.font}"`;
+  ctx.font = fontSpec(layer);
   const lines = String(layer.text ?? '').split('\n');
   const widths = lines.map((l) => ctx.measureText(l).width);
   const width = Math.max(1, ...widths);
@@ -130,7 +130,7 @@ function drawTextLayer(ctx, layer) {
       ctx.restore();
     }
 
-    ctx.font = `${layer.weight} ${layer.size}px "${layer.font}"`;
+    ctx.font = fontSpec(layer);
     ctx.fillStyle = layer.color;
     ctx.textBaseline = 'top';
     ctx.textAlign = 'left';
