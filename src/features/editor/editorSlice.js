@@ -34,6 +34,7 @@ const baseText = {
   size: 36,
   color: '#ffffff',
   weight: 400,
+  italic: false,
   align: 'left',
   opacity: 1,
   rotation: 0,
@@ -325,6 +326,17 @@ const editorSlice = createSlice({
       record(state);
       [state.layers[i], state.layers[j]] = [state.layers[j], state.layers[i]];
     },
+    // Applies a typeface, weight or slant to every text layer at once, so a
+    // banner reads as one piece instead of needing each layer set by hand.
+    // Only the keys given are touched, and it is a single undo step.
+    styleAllText(state, action) {
+      const patch = action.payload;
+      const texts = state.layers.filter((l) => l.type === 'text');
+      if (!texts.length) return;
+      record(state);
+      for (const layer of texts) Object.assign(layer, patch);
+      state.coalesceKey = null;
+    },
     // Moves every text layer to a shared edge so they line up as a block:
     // the same left edge, the same centre, or the same right edge. Widths have
     // to be measured against real font metrics, which a reducer cannot do, so
@@ -404,6 +416,7 @@ const editorSlice = createSlice({
 
 export const {
   alignTextLayers,
+  styleAllText,
   replaceIcon,
   setCanvasSize,
   setCanvasFill,

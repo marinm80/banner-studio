@@ -24,6 +24,7 @@ export default function TextLayer({ layer, selected, onStartDrag }) {
         fontFamily: `"${layer.font}"`,
         fontSize: layer.size,
         fontWeight: layer.weight,
+        fontStyle: layer.italic ? 'italic' : 'normal',
         color: layer.color,
         textAlign: layer.align,
         lineHeight: LINE_HEIGHT,

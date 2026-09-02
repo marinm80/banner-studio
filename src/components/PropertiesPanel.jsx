@@ -8,7 +8,7 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { updateLayer, removeLayer, duplicateLayer, moveLayer } from '../features/editor/editorSlice';
-import { FONTS } from '../utils/fonts';
+import { FONTS, FONT_GROUPS, fontGroup } from '../utils/fonts';
 
 const inputCls =
   'w-full rounded border border-slate-700 bg-slate-800 px-2 py-1 text-sm text-slate-100 focus:border-cyan-500 focus:outline-none';
@@ -97,11 +97,19 @@ export default function PropertiesPanel() {
           </Row>
           <Row label="Font">
             <select className={inputCls} value={layer.font} onChange={(e) => set({ font: e.target.value })}>
-              {FONTS.map((f) => (
-                <option key={f.family} value={f.family} style={{ fontFamily: f.family }}>
-                  {f.family}
-                </option>
-              ))}
+              {FONT_GROUPS.map((group) => {
+                const inGroup = FONTS.filter((f) => fontGroup(f) === group);
+                if (!inGroup.length) return null;
+                return (
+                  <optgroup key={group} label={group}>
+                    {inGroup.map((f) => (
+                      <option key={f.family} value={f.family} style={{ fontFamily: f.family }}>
+                        {f.family}
+                      </option>
+                    ))}
+                  </optgroup>
+                );
+              })}
             </select>
           </Row>
           <div className="grid grid-cols-2 gap-2">
@@ -129,6 +137,22 @@ export default function PropertiesPanel() {
                 <option value={400}>Normal</option>
                 <option value={700}>Bold</option>
               </select>
+            </Row>
+            <Row label="Slant">
+              <button
+                onClick={() => set({ italic: !layer.italic }, false)}
+                aria-pressed={!!layer.italic}
+                className={`w-full rounded border px-2 py-1.5 text-xs ${
+                  layer.italic
+                    ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300'
+                    : 'border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-500'
+                }`}
+              >
+                <span aria-hidden className="italic">
+                  I
+                </span>{' '}
+                Italic
+              </button>
             </Row>
             <Row label="Align">
               <div className="flex gap-1">
