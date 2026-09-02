@@ -34,6 +34,13 @@ export const FONTS = [
   { family: 'Satisfy', google: true, weights: '400', italic: false, group: 'Script' },
   { family: 'Lobster', google: true, weights: '400', italic: false, group: 'Script' },
   { family: 'Caveat', google: true, weights: '400;700', italic: false, group: 'Script' },
+  // Signature-style hands, the ones that actually look written rather than
+  // merely slanted. Single weight — these families ship only a 400.
+  { family: 'Allura', google: true, weights: '400', italic: false, group: 'Script' },
+  { family: 'Sacramento', google: true, weights: '400', italic: false, group: 'Script' },
+  { family: 'Parisienne', google: true, weights: '400', italic: false, group: 'Script' },
+  { family: 'Marck Script', google: true, weights: '400', italic: false, group: 'Script' },
+  { family: 'Homemade Apple', google: true, weights: '400', italic: false, group: 'Script' },
 
   // Monospace
   { family: 'JetBrains Mono', google: true, italic: true, group: 'Monospace' },
